@@ -10,6 +10,7 @@ exports.test = function(req, res) {
     });
 };
 
+// Uses Acorn to parse the given *body* and returns its output.
 exports.acorn = function(req, res) {
     var result = acorn.parse(req.body.text);
     res.json({
