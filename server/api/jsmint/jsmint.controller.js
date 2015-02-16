@@ -46,9 +46,18 @@ exports.acorn = function(req, res) {
 
 */
 exports.whitelist = function(req, res) {
-    var text = req.body.text,
-        includes = req.body.includes;
+    var text = req.body["text"],
+        includes = req.body["includes[]"];
 
     var statementTypes = findStatementTypes(acorn.parse(text));
-    
+
+    var contains = _.intersection(includes, statementTypes);
+    var missing = _.difference(includes, contains);
+    var passing = missing.length == 0;
+
+    res.json({
+        contains: contains,
+        missing: missing,
+        passing: passing
+    })
 }
