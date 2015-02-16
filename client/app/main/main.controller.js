@@ -5,7 +5,6 @@ angular.module('jsmintApp').controller('MainCtrl', function($scope, $http) {
   var editor;
 
   // things to expose to webpage
-  $scope.temp = 55;
   $scope.whitelistResults = {};
   $scope.blacklistResults = {};
 
@@ -30,13 +29,6 @@ angular.module('jsmintApp').controller('MainCtrl', function($scope, $http) {
   // Runs the selected test on the user's inputted code.
   $scope.check = function() {
     var text = editor.getValue();
-
-    // run through Acorn
-    $http.post("/api/jsmint/acorn", {
-      text: text
-    }).success(function(data, status, headers, config) {
-      $scope.temp = JSON.stringify(data.result);
-    });
 
     $http.post("/api/jsmint/whitelist", {
       includes: whitelist,
