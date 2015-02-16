@@ -9,12 +9,22 @@ angular.module('jsmintApp').controller('MainCtrl', function($scope, $http) {
   $scope.whitelistResults = {};
   $scope.blacklistResults = {};
 
+  // handle tabs
+  $scope.activeTest = 'whitelist';
+  $scope.setActiveTest = function(test) {
+    $scope.activeTest = test;
+  };
+  $scope.isActiveTest = function(test) {
+    return $scope.activeTest === test;
+  };
+
+
   var whitelist = [
-      "IfStatement",
-      "ForStatement"
+    "IfStatement",
+    "ForStatement"
   ];
   var blacklist = [
-      "WhileStatement"
+    "WhileStatement"
   ];
 
   // Runs the selected test on the user's inputted code.
@@ -22,16 +32,24 @@ angular.module('jsmintApp').controller('MainCtrl', function($scope, $http) {
     var text = editor.getValue();
 
     // run through Acorn
-    $http.post("/api/jsmint/acorn", { text: text }).success(function(data, status, headers, config){
-        $scope.temp = JSON.stringify(data.result);
+    $http.post("/api/jsmint/acorn", {
+      text: text
+    }).success(function(data, status, headers, config) {
+      $scope.temp = JSON.stringify(data.result);
     });
 
-    $http.post("/api/jsmint/whitelist", { includes: whitelist, text: text }).success(function(data){
-        $scope.whitelistResults = data;
+    $http.post("/api/jsmint/whitelist", {
+      includes: whitelist,
+      text: text
+    }).success(function(data) {
+      $scope.whitelistResults = data;
     });
 
-    $http.post("/api/jsmint/blacklist", { excludes: blacklist, text: text }).success(function(data){
-        $scope.blacklistResults = data;
+    $http.post("/api/jsmint/blacklist", {
+      excludes: blacklist,
+      text: text
+    }).success(function(data) {
+      $scope.blacklistResults = data;
     });
   };
 
@@ -42,4 +60,7 @@ angular.module('jsmintApp').controller('MainCtrl', function($scope, $http) {
   editor.getSession().setMode("ace/mode/javascript");
 
   editor.on('change', _.throttle($scope.check, 100));
+
+  // run this on init
+  $scope.check();
 });

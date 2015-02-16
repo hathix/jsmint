@@ -3,20 +3,82 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-            <div id="editor">
-                var x = 5;
-            </div>
+            <div id="editor"></div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-            <div class="text-success">
-                {{whitelistResults}}
 
-                {{whitelistResults.passing}}
-            </div>
-            <div class="text-danger">
-                {{blacklistResults}}
+            <ul class="nav nav-tabs">
+                <li ng-class="{'active': isActiveTest('whitelist')}">
+                    <a href="#" ng-click="setActiveTest('whitelist')">
+                        Whitelist
+                    </a>
+                </li>
+                <li ng-class="{'active': isActiveTest('blacklist')}">
+                    <a href="#" ng-click="setActiveTest('blacklist')">
+                        Blacklist
+                    </a>
+                </li>
+            </ul>
 
-                {{blacklistResults.passing}}
+            <div>
+                <div class="panel panel-body" ng-show="isActiveTest('whitelist')">
+                    <p class="lead">
+                        You MUST use the following:
+                    </p>
+
+                    <div class="list-group">
+                        <div class="list-group-item list-group-item-success"
+                            ng-repeat="item in whitelistResults.contains">
+                            <span class="fa fa-check fa-lg"></span>
+                            {{item}}
+                        </div>
+                        <div class="list-group-item list-group-item-danger"
+                            ng-repeat="item in whitelistResults.missing">
+                            <span class="fa fa-close fa-lg"></span>
+                            {{item}}
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <p class="lead text-success" ng-show="whitelistResults.passing">
+                        <span class="fa fa-check fa-lg"></span>
+                        Passing whitelist check
+                    </p>
+                    <p class="lead text-danger" ng-show="!whitelistResults.passing">
+                        <span class="fa fa-close fa-lg"></span>
+                        Failing whitelist check
+                    </p>
+                </div>
+                <div class="panel panel-body" ng-show="isActiveTest('blacklist')">
+                    <p class="lead">
+                        You MUST NOT use the following:
+                    </p>
+
+                    <div class="list-group">
+                        <div class="list-group-item list-group-item-success"
+                            ng-repeat="item in blacklistResults.absent">
+                            <span class="fa fa-check fa-lg"></span>
+                            {{item}}
+                        </div>
+                        <div class="list-group-item list-group-item-danger"
+                            ng-repeat="item in blacklistResults.violates">
+                            <span class="fa fa-close fa-lg"></span>
+                            {{item}}
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <p class="lead text-success" ng-show="blacklistResults.passing">
+                        <span class="fa fa-check fa-lg"></span>
+                        Passing blacklist check
+                    </p>
+                    <p class="lead text-danger" ng-show="!blacklistResults.passing">
+                        <span class="fa fa-close fa-lg"></span>
+                        Failing blacklist check
+                    </p>
+                </div>
             </div>
         </div>
     </div>
