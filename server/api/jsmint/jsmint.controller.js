@@ -22,14 +22,8 @@ var findStatementTypes = function(tree) {
     return statementTypes;
 }
 
-// Send back what you sent
-exports.test = function(req, res) {
-    res.json({
-        body: req.body
-    });
-};
 
-// Uses Acorn to parse the given *body* and returns its output.
+// Uses Acorn to parse the given `text` and returns its output.
 exports.acorn = function(req, res) {
     var result = acorn.parse(req.body.text);
 
@@ -38,10 +32,23 @@ exports.acorn = function(req, res) {
     });
 };
 
-
 /*
-    Turns the given Acorn Abstract Syntax Tree into a tree where
-    statements (for, while, if, etc.) are nodes.
-    Each node contains:
-        type : String (ForStatement, IfStatement, )
+    Determines if the given `text` includes all of the required statements.
+
+    Parameters:
+        text : string - JavaScript source code to parse
+        includes : string[] - a list of statement types (e.g. ForStatement) that MUST be included
+
+    Outputs:
+        missing : string[] - a list of statement types in `includes` that aren't included
+        contains : string[] - a list of statement types in `includes` that are included
+        passing : boolean - true if no statements are missing, false otherwise
+
 */
+exports.whitelist = function(req, res) {
+    var text = req.body.text,
+        includes = req.body.includes;
+
+    var statementTypes = findStatementTypes(acorn.parse(text));
+    
+}
