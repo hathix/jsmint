@@ -3,7 +3,7 @@ var acorn = require('acorn'),
   _ = require('lodash');
 
 
-var src = "for(;;){ while(x == 3){ x = 5; }}";
+var src = "if(x==2){ }";
 var tree = acorn.parse(src);
 
 /*
@@ -25,15 +25,15 @@ var findStatementTypes = function(tree) {
 }
 
 var statements = findStatementTypes(tree);
-var includes = [
+var excludes = [
     'WhileStatement',
     'ForStatement'
 ];
 
-var contains = _.intersection(includes, statements);
-var missing = _.difference(includes, contains);
-var passing = missing.length == 0;
+var violates = _.intersection(excludes, statements);
+var absent = _.difference(excludes, violates);
+var passing = violates.length == 0;
 
-console.log(contains);
-console.log(missing);
+console.log(violates);
+console.log(absent);
 console.log(passing);
