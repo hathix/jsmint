@@ -24,6 +24,7 @@ var findStatementTypes = function(tree) {
 
 
 // Uses Acorn to parse the given `text` and returns its output.
+// A test function.
 exports.acorn = function(req, res) {
     var result = acorn.parse(req.body.text);
 
