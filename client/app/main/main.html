@@ -18,6 +18,11 @@
                         Blacklist
                     </a>
                 </li>
+                <li ng-class="{'active': isActiveTest('codeTree')}">
+                    <a href="#" ng-click="setActiveTest('codeTree')">
+                        Code Tree
+                    </a>
+                </li>
             </ul>
 
             <div>
@@ -78,6 +83,18 @@
                         <span class="fa fa-close fa-lg"></span>
                         Failing blacklist check
                     </p>
+                </div>
+                <div class="panel panel-body" ng-show="isActiveTest('codeTree')">
+                    <script type="text/ng-template" id="tree-item">
+                        {{item.type}}
+                        <ul>
+                            <li ng-repeat="item in item.children" ng-include="'tree-item'"></li>
+                        </ul>
+                    </script>
+
+                    <ul>
+                        <li ng-repeat="item in codeTree" ng-include="'tree-item'"></li>
+                    </ul>
                 </div>
             </div>
         </div>

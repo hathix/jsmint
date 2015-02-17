@@ -7,6 +7,7 @@ angular.module('jsmintApp').controller('MainCtrl', function($scope, $http) {
   // things to expose to webpage
   $scope.whitelistResults = {};
   $scope.blacklistResults = {};
+  $scope.codeTree = {};
 
   // handle tabs
   $scope.activeTest = 'whitelist';
@@ -16,6 +17,20 @@ angular.module('jsmintApp').controller('MainCtrl', function($scope, $http) {
   $scope.isActiveTest = function(test) {
     return $scope.activeTest === test;
   };
+
+  $scope.codeTree = [{
+    type: "a",
+    children: [{
+      type: "b",
+      children: [{
+        type: "c",
+        children: []
+      }]
+    }, {
+      type: "d",
+      children: []
+    }]
+  }];
 
 
   var whitelist = [
@@ -42,6 +57,14 @@ angular.module('jsmintApp').controller('MainCtrl', function($scope, $http) {
       text: text
     }).success(function(data) {
       $scope.blacklistResults = data;
+    });
+
+    $http.post("/api/jsmint/codetree", {
+      text: text
+    }).success(function(data) {
+        // the outputted tree has just one head
+        // but the renderer expects an array -- so wrap it
+      $scope.codeTree = [data.tree];
     });
   };
 
