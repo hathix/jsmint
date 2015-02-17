@@ -3,7 +3,7 @@ var acorn = require('acorn'),
   _ = require('lodash');
 
 
-var src = "if(x==2){ for(var i=0;i<5;i++){ var x = 5; while(true){} }} else { var y = 3; }";
+var src = "if(x==2){ for(var i=0;i<5;i++){ var x = 5; while(true){} }} else { var y = 3; for(;;){ for(;;){} } }";
 var tree = acorn.parse(src);
 
 /*
@@ -62,7 +62,7 @@ var simple = toStatementTree(tree);
 /*
     Tries to find `treeToMatch` inside `realTree`, including `realTree`'s head node.
 */
-var _matchTree = function(realTree, treeToMatch) {
+var matchTree = function(realTree, treeToMatch) {
     // try to find `treeToMatch`'s top node
 
     // compare `realTree`'s top node to `treeToMatch`'s top node
@@ -72,7 +72,7 @@ var _matchTree = function(realTree, treeToMatch) {
         // found it!
 
         // mark this node as visited already so we can't reuse it
-        realTree._visited = true;
+        // realTree._visited = true;
 
         // now start checking `treeToMatch`'s children
 
@@ -110,32 +110,10 @@ var _matchTreeChildren = function(realTree, treeToMatch) {
 
     // as long as there's true somewhere in there, we're good
     var foundInChildren = _.map(realTree.children, function(realChild){
-        return _matchTree(realChild, treeToMatch);
+        return matchTree(realChild, treeToMatch);
     });
 
     return foundInChildren.indexOf(true) > -1;
-};
-
-/*
-    Removes `_visited` tags from `tree`'s head node and all children thereof.
-*/
-var _cleanseTree = function(tree) {
-    if(typeof tree._visited !== "undefined") {
-        delete tree._visited;
-    }
-
-    _.each(tree.children, function(child){
-        _cleanseTree(child);
-    });
-}
-
-var matchTree = function(realTree, treeToMatch) {
-    var found = _matchTree(realTree, treeToMatch);
-
-    // do some cleanup by removing _visited tags
-    _cleanseTree(realTree);
-
-    return found;
 };
 
 // > true
@@ -157,7 +135,15 @@ console.log(matchTree(simple,
 // > false
 console.log(matchTree(simple,
         new StatementNode('IfStatement', [
-            new StatementNode('VariableDeclaration', []),
-            new StatementNode('VariableDeclaration', []),
-            new StatementNode('VariableDeclaration', []),
+            new StatementNode('IfStatement', [])
+        ])));
+// > true
+console.log(matchTree(simple,
+        new StatementNode('IfStatement', [
+            new StatementNode('ForStatement', [
+                new StatementNode('VariableDeclaration', [])
+            ]),
+            new StatementNode('ForStatement', [
+                new StatementNode('ForStatement', [])
+            ])
         ])));
