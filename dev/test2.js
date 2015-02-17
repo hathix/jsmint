@@ -59,14 +59,22 @@ var toStatementTree = function(ast) {
 
 var simple = toStatementTree(tree);
 
-var matchTree = function(realTree, treeToMatch) {
+/*
+    Tries to find `treeToMatch` inside `realTree`, including `realTree`'s head node.
+*/
+var _matchTree = function(realTree, treeToMatch) {
     // try to find `treeToMatch`'s top node
-    console.log(realTree.type + " vs. " + treeToMatch.type);
 
     // compare `realTree`'s top node to `treeToMatch`'s top node
-    if(treeToMatch.type == realTree.type) {
-        // found it! now start checking `treeToMatch`'s children
-        console.log("FOUND " + treeToMatch.type);
+    // (but this comparison will only work if the real tree's top node hasn't been visited already;
+    // if that's the case, just check it's children)
+    if(!realTree._visited && treeToMatch.type == realTree.type) {
+        // found it!
+
+        // mark this node as visited already so we can't reuse it
+        realTree._visited = true;
+
+        // now start checking `treeToMatch`'s children
 
         if(treeToMatch.children.length === 0) {
             // no children left to match; the tree has ended
@@ -74,38 +82,82 @@ var matchTree = function(realTree, treeToMatch) {
         }
 
         // all children MUST be found
-        var foundInChildren = _.map(treeToMatch.children, function(child){
-            return matchTree(realTree, child);
+        var foundInChildren = _.map(treeToMatch.children, function(matchChild){
+            // compare matchChild with every child of the real tree's top node
+            // (not the real tree's top node itself, because we can't re-use it)
+            // the child must be found in ONE of those
+            return _matchTreeChildren(realTree, matchChild);
         });
 
         return foundInChildren.indexOf(false) === -1;
     }
     else {
         // try matching each child of `realTree`
-
-        if(realTree.children.length === 0) {
-            // no children left in tree; ran out of options
-            return false;
-        }
-
-        // as long as there's true somewhere in there, we're good
-        var foundInChildren = _.map(realTree.children, function(child){
-            return matchTree(child, treeToMatch);
-        });
-
-        return foundInChildren.indexOf(true) > -1;
+        return _matchTreeChildren(realTree, treeToMatch);
     }
 };
 
+/*
+    Tries to find `treeToMatch` among all the CHILDREN of `realTree`,
+    not including the head node of `realTree`.
+    This is a helper function and should only be called by matchTree().
+*/
+var _matchTreeChildren = function(realTree, treeToMatch) {
+    if(realTree.children.length === 0) {
+        // no children left in tree; ran out of options
+        return false;
+    }
+
+    // as long as there's true somewhere in there, we're good
+    var foundInChildren = _.map(realTree.children, function(realChild){
+        return _matchTree(realChild, treeToMatch);
+    });
+
+    return foundInChildren.indexOf(true) > -1;
+};
+
+/*
+    Removes `_visited` tags from `tree`'s head node and all children thereof.
+*/
+var _cleanseTree = function(tree) {
+    if(typeof tree._visited !== "undefined") {
+        delete tree._visited;
+    }
+
+    _.each(tree.children, function(child){
+        _cleanseTree(child);
+    });
+}
+
+var matchTree = function(realTree, treeToMatch) {
+    var found = _matchTree(realTree, treeToMatch);
+
+    // do some cleanup by removing _visited tags
+    _cleanseTree(realTree);
+
+    return found;
+};
+
+// > true
 console.log(matchTree(simple, new StatementNode('ForStatement', [ new StatementNode('VariableDeclaration', []) ])));
+// > true
 console.log(matchTree(simple, new StatementNode('VariableDeclaration', [])));
+// > true
 console.log(matchTree(simple,
         new StatementNode('ForStatement', [
             new StatementNode('VariableDeclaration', []),
             new StatementNode('WhileStatement', [])
         ])));
+// > false
 console.log(matchTree(simple,
         new StatementNode('ForStatement', [
             new StatementNode('VariableDeclaration', []),
             new StatementNode('ForStatement', [])
-        ]))); // TODO FIX THIS
+        ])));
+// > false
+console.log(matchTree(simple,
+        new StatementNode('IfStatement', [
+            new StatementNode('VariableDeclaration', []),
+            new StatementNode('VariableDeclaration', []),
+            new StatementNode('VariableDeclaration', []),
+        ])));
