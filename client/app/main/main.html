@@ -55,58 +55,74 @@
       <span ng-include="'tab-list'"></span>
       <div>
         <div class="panel panel-body" ng-show="isActiveTest('whitelist')">
-          <p class="lead">
-            You MUST use the following:
-          </p>
+          <div ng-show="getWhitelist().length > 0">
+            <p class="lead">
+              You MUST use the following:
+            </p>
 
-          <div class="list-group">
-            <div class="list-group-item list-group-item-success" ng-repeat="item in whitelistResults.contains">
+            <div class="list-group">
+              <div class="list-group-item list-group-item-success" ng-repeat="item in whitelistResults.contains">
+                <span class="fa fa-check fa-lg"></span>
+                {{item}}
+              </div>
+              <div class="list-group-item list-group-item-danger" ng-repeat="item in whitelistResults.missing">
+                <span class="fa fa-close fa-lg"></span>
+                {{item}}
+              </div>
+            </div>
+
+            <br>
+
+            <p class="lead text-success" ng-show="whitelistResults.passing">
               <span class="fa fa-check fa-lg"></span>
-              {{item}}
-            </div>
-            <div class="list-group-item list-group-item-danger" ng-repeat="item in whitelistResults.missing">
+              Passing whitelist test
+            </p>
+            <p class="lead text-danger" ng-show="!whitelistResults.passing">
               <span class="fa fa-close fa-lg"></span>
-              {{item}}
-            </div>
+              Failing whitelist test
+            </p>
           </div>
-
-          <br>
-
-          <p class="lead text-success" ng-show="whitelistResults.passing">
-            <span class="fa fa-check fa-lg"></span>
-            Passing whitelist test
-          </p>
-          <p class="lead text-danger" ng-show="!whitelistResults.passing">
-            <span class="fa fa-close fa-lg"></span>
-            Failing whitelist test
-          </p>
+          <div ng-show="getWhitelist().length == 0">
+            <p class="lead text-info">
+              <span class="fa fa-info"></span>
+              No statements are required.
+            </p>
+          </div>
         </div>
         <div class="panel panel-body" ng-show="isActiveTest('blacklist')">
-          <p class="lead">
-            You MUST NOT use the following:
-          </p>
+          <div ng-show="getBlacklist().length > 0">
+            <p class="lead">
+              You MUST NOT use the following:
+            </p>
 
-          <div class="list-group">
-            <div class="list-group-item list-group-item-success" ng-repeat="item in blacklistResults.absent">
+            <div class="list-group">
+              <div class="list-group-item list-group-item-success" ng-repeat="item in blacklistResults.absent">
+                <span class="fa fa-check fa-lg"></span>
+                {{item}}
+              </div>
+              <div class="list-group-item list-group-item-danger" ng-repeat="item in blacklistResults.violates">
+                <span class="fa fa-close fa-lg"></span>
+                {{item}}
+              </div>
+            </div>
+
+            <br>
+
+            <p class="lead text-success" ng-show="blacklistResults.passing">
               <span class="fa fa-check fa-lg"></span>
-              {{item}}
-            </div>
-            <div class="list-group-item list-group-item-danger" ng-repeat="item in blacklistResults.violates">
+              Passing blacklist check
+            </p>
+            <p class="lead text-danger" ng-show="!blacklistResults.passing">
               <span class="fa fa-close fa-lg"></span>
-              {{item}}
-            </div>
+              Failing blacklist check
+            </p>
           </div>
-
-          <br>
-
-          <p class="lead text-success" ng-show="blacklistResults.passing">
-            <span class="fa fa-check fa-lg"></span>
-            Passing blacklist check
-          </p>
-          <p class="lead text-danger" ng-show="!blacklistResults.passing">
-            <span class="fa fa-close fa-lg"></span>
-            Failing blacklist check
-          </p>
+          <div ng-show="getBlacklist().length == 0">
+            <p class="lead text-info">
+              <span class="fa fa-info"></span>
+              No statements are forbidden.
+            </p>
+          </div>
         </div>
         <div class="panel panel-body" ng-show="isActiveTest('codeTree')">
           <p class="lead">

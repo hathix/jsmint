@@ -99,12 +99,26 @@ angular.module('jsmintApp').controller('MainCtrl', function($scope, $http) {
     }).compact().value().sort();
   }
 
+  /*
+    Returns a list of all statements that MUST be used.
+  */
+  $scope.getWhitelist = function() {
+      return hashToArray($scope.whitelistHash);
+  };
+
+  /*
+    Returns a list of all statements that MUST NOT be used
+  */
+  $scope.getBlacklist = function() {
+      return hashToArray($scope.blacklistHash);
+  }
+
   // Runs the selected test on the user's inputted code.
   $scope.check = function() {
     var text = editor.getValue();
 
-    var whitelist = hashToArray($scope.whitelistHash);
-    var blacklist = hashToArray($scope.blacklistHash);
+    var whitelist = $scope.getWhitelist();
+    var blacklist = $scope.getBlacklist();
 
     $http.post("/api/jsmint/whitelist", {
       includes: whitelist,
