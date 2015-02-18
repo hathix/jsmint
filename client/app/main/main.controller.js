@@ -23,10 +23,10 @@ angular.module('jsmintApp').controller('MainCtrl', function($scope, $http) {
 
   // the tree user wants to match against
   var generateDefaultMatchTree = function() {
-      return {
-          type: "Program",
-          children: []
-      };
+    return {
+      type: "Program",
+      children: []
+    };
   };
   $scope.matchTree = generateDefaultMatchTree();
 
@@ -96,7 +96,7 @@ angular.module('jsmintApp').controller('MainCtrl', function($scope, $http) {
   var hashToArray = function(hash) {
     return _(hash).map(function(truthiness, type) {
       return truthiness ? type : undefined;
-  }).compact().value().sort();
+    }).compact().value().sort();
   }
 
   // Runs the selected test on the user's inputted code.
@@ -106,12 +106,12 @@ angular.module('jsmintApp').controller('MainCtrl', function($scope, $http) {
     var whitelist = hashToArray($scope.whitelistHash);
     var blacklist = hashToArray($scope.blacklistHash);
 
-      $http.post("/api/jsmint/whitelist", {
-        includes: whitelist,
-        text: text
-      }).success(function(data) {
-        $scope.whitelistResults = data;
-      });
+    $http.post("/api/jsmint/whitelist", {
+      includes: whitelist,
+      text: text
+    }).success(function(data) {
+      $scope.whitelistResults = data;
+    });
 
     $http.post("/api/jsmint/blacklist", {
       excludes: blacklist,

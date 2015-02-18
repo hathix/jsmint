@@ -152,7 +152,6 @@ exports.acorn = function(req, res) {
 exports.whitelist = function(req, res) {
   var text = req.body.text,
     includes = req.body.includes;
-  console.log(req.body);
 
   var statementTypes = findStatementTypes(acorn.parse(text));
 
@@ -182,7 +181,6 @@ exports.whitelist = function(req, res) {
 exports.blacklist = function(req, res) {
   var text = req.body.text,
     excludes = req.body.excludes;
-  console.log(req.body);
 
   var statementTypes = findStatementTypes(acorn.parse(text));
 
@@ -224,9 +222,6 @@ exports.codetree = function(req, res) {
   var matched = undefined;
   if (treeToMatch) {
       matched = matchTree(statementTree, treeToMatch);
-      console.log(treeToMatch);
-      console.log(statementTree);
-      console.log(matched);
   }
 
   res.json({
