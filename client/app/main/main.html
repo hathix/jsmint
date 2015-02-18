@@ -99,6 +99,34 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <script type="text/ng-template" id="interactive-tree-item">
+            {{item.type}}
+
+            <select ng-model="item.__text" class="form-control">
+                <option value="{{type}}" ng-repeat="type in statementTypes">{{type}}</option>
+            </select>
+
+            <button class="btn btn-default" ng-click="addChild(item, item.__text); item.__text = null;">
+                <span class="fa fa-plus"></span>
+                Add child
+            </button>
+
+            <ul>
+                <li ng-repeat="item in item.children" ng-include="'interactive-tree-item'"></li>
+            </ul>
+        </script>
+
+        <ul>
+            <li ng-repeat="item in matchTree" ng-include="'interactive-tree-item'"></li>
+        </ul>
+
+        <button class="btn btn-danger" ng-click="clearMatchTree()">
+            <span class="fa fa-close"></span>
+            Clear tree
+        </button>
+    </div>
 </div>
 
 <footer class="footer well">
