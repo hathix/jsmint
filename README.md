@@ -15,3 +15,19 @@ $ grunt serve
 ```
 
 The last command will open up `localhost:9000`, where the app will be running.
+
+## Stack
+
+* Node.js/Express.js
+* Acorn
+* AngularJS
+* jQuery
+* Lodash
+* Bootstrap
+* Font Awesome
+
+## Tools used
+
+* Grunt
+* Bower
+* Yeoman
