@@ -4,6 +4,7 @@ angular.module('jsmintApp').controller('MainCtrl', function($scope, $http) {
   // ace editor
   var editor;
 
+  // constants
   $scope.statementTypes = [
     'ForStatement',
     'IfStatement',
@@ -13,15 +14,21 @@ angular.module('jsmintApp').controller('MainCtrl', function($scope, $http) {
   ];
   $scope.statementTypes = $scope.statementTypes.sort();
 
+  // output from API
   $scope.whitelistResults = {};
   $scope.blacklistResults = {};
   // the tree of the actual code
-  $scope.codeTree = [];
+  $scope.codeTree = {};
+  $scope.codeTreeMatched = false;
+
   // the tree user wants to match against
-  $scope.matchTree = [{
-    type: "Program",
-    children: []
-  }];
+  var generateDefaultMatchTree = function() {
+      return {
+          type: "Program",
+          children: []
+      };
+  };
+  $scope.matchTree = generateDefaultMatchTree();
 
   // handle tabs
   $scope.activeTest = 'whitelist';
@@ -40,14 +47,17 @@ angular.module('jsmintApp').controller('MainCtrl', function($scope, $http) {
         type: type,
         children: []
       });
+
+      // re-render and re-check output tree
+      $scope.check();
     }
   };
   // resets the `matchTree` to its default (empty) state.
   $scope.clearMatchTree = function() {
-    $scope.matchTree = [{
-      type: "Program",
-      children: []
-    }];
+    $scope.matchTree = generateDefaultMatchTree();
+
+    // re-render and re-check output tree
+    $scope.check();
   };
 
   $scope.codeTree = [{
@@ -111,11 +121,11 @@ angular.module('jsmintApp').controller('MainCtrl', function($scope, $http) {
     });
 
     $http.post("/api/jsmint/codetree", {
-      text: text
+      text: text,
+      treeToMatch: $scope.matchTree
     }).success(function(data) {
-      // the outputted tree has just one head
-      // but the renderer expects an array -- so wrap it
-      $scope.codeTree = [data.tree];
+      $scope.codeTree = data.tree;
+      $scope.codeTreeMatched = data.matched;
     });
   };
 

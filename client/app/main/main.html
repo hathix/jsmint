@@ -14,7 +14,7 @@
         </li>
         <li ng-class="{'active': isActiveTest('codeTree')}">
             <a href="#" ng-click="setActiveTest('codeTree')">
-                Code Tree
+                Structure
             </a>
         </li>
     </ul>
@@ -55,11 +55,11 @@
 
                     <p class="lead text-success" ng-show="whitelistResults.passing">
                         <span class="fa fa-check fa-lg"></span>
-                        Passing whitelist check
+                        Passing whitelist test
                     </p>
                     <p class="lead text-danger" ng-show="!whitelistResults.passing">
                         <span class="fa fa-close fa-lg"></span>
-                        Failing whitelist check
+                        Failing whitelist test
                     </p>
                 </div>
                 <div class="panel panel-body" ng-show="isActiveTest('blacklist')">
@@ -92,6 +92,10 @@
                     </p>
                 </div>
                 <div class="panel panel-body" ng-show="isActiveTest('codeTree')">
+                    <p class="lead">
+                        Your code's structure:
+                    </p>
+
                     <script type="text/ng-template" id="tree-item">
                         {{item.type}}
                         <ul>
@@ -100,14 +104,31 @@
                     </script>
 
                     <ul>
-                        <li ng-repeat="item in codeTree" ng-include="'tree-item'"></li>
+                        <li ng-repeat="item in [codeTree]" ng-include="'tree-item'"></li>
                     </ul>
+
+                    <p class="lead">
+                        Required structure:
+                    </p>
+
+                    <ul>
+                        <li ng-repeat="item in [matchTree]" ng-include="'tree-item'"></li>
+                    </ul>
+
+                    <p class="lead text-success" ng-show="codeTreeMatched">
+                        <span class="fa fa-check fa-lg"></span>
+                        Passing structure test
+                    </p>
+                    <p class="lead text-danger" ng-show="!codeTreeMatched">
+                        <span class="fa fa-close fa-lg"></span>
+                        Failing structure test
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
-    <br>
+    <hr>
 
     <div class="row">
 
@@ -143,7 +164,7 @@
             </div>
             <div class="panel panel-body" ng-show="isActiveTest('codeTree')">
                 <p class="lead">
-                    Specify a tree below that the code tree from the inputted code must match.
+                    Specify a tree below that the tree generated from the input code must contain.
                 </p>
                 <script type="text/ng-template" id="interactive-tree-item">
                     <span>{{item.type}}</span>
@@ -167,7 +188,7 @@
                 </script>
 
                 <ul>
-                    <li ng-repeat="item in matchTree" ng-include="'interactive-tree-item'"></li>
+                    <li ng-repeat="item in [matchTree]" ng-include="'interactive-tree-item'"></li>
                 </ul>
 
                 <button class="btn btn-danger" ng-click="clearMatchTree()">
