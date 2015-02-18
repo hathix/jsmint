@@ -1,4 +1,4 @@
-<div ng-include="'components/navbar/navbar.html'"></div>
+<!-- <div ng-include="'components/navbar/navbar.html'"></div> -->
 
 <script type="text/ng-template" id="tab-list">
     <ul class="nav nav-tabs">
@@ -21,7 +21,7 @@
 </script>
 
 <div class="container">
-    <div class="jumbotron">
+    <div class="jumbotron" ng-show="true">
         <h1 class="text-center">
             <span class="text-primary">
                 <img src="assets/images/mint.png">
@@ -32,16 +32,20 @@
             Refresh your JavaScript.
         </h2>
 
-        <p class="lead">
+        <br>
 
+        <p class="lead">
+            jsMint is a smart, friendly <strong>JavaScript checking tool</strong>. Just type in some code
+            and see it automatically checked using three <strong>smart, super-customizable tests</strong>.
+            It provides advanced <strong>unit testing</strong> and granular <strong>feedback</strong>.
         </p>
     </div>
 
     <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <div id="editor">// Your code here...</div>
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <h3>
                 <span class="fa fa-dashboard"></span>
                 Test results
@@ -207,7 +211,7 @@
                     <li ng-repeat="item in [matchTree]" ng-include="'interactive-tree-item'"></li>
                 </ul>
 
-                <button class="btn btn-danger" ng-click="clearMatchTree()">
+                <button class="btn btn-primary" ng-click="clearMatchTree()">
                     <span class="fa fa-close"></span>
                     Reset tree
                 </button>
@@ -216,8 +220,10 @@
     </div>
 </div>
 
-<footer class="footer well">
-  <div class="container">
-    <p>jsMint | Neel Mehta</p>
+<footer class="footer">
+  <div class="container lead">
+    <p>
+        jsMint &copy; <a href="http://hathix.com">Neel Mehta</a>.
+    </p>
   </div>
 </footer>
