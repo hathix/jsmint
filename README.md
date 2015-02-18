@@ -16,6 +16,14 @@ $ grunt serve
 
 The last command will open up `localhost:9000`, where the app will be running.
 
+## APIs
+
+jsMint ships with a friendly interface to three powerful RESTful APIs to check JavaScript code against:
+
+* `POST /api/jsmint/whitelist`: Checks if the code contains *all* the specified functionality.
+* `POST /api/jsmint/blacklist`: Checks if the code contains *none* of the specified functionality.
+* `POST /api/jsmint/codetree`: Generates a simplified abstract syntax tree of the code and checks if it matches a specified test tree.
+
 ## Stack
 
 * Node.js/Express.js
