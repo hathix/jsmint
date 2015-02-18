@@ -1,230 +1,226 @@
 <!-- <div ng-include="'components/navbar/navbar.html'"></div> -->
 
 <script type="text/ng-template" id="tab-list">
-    <ul class="nav nav-tabs">
-        <li ng-class="{'active': isActiveTest('whitelist')}">
-            <a href="#" ng-click="setActiveTest('whitelist')">
+  <ul class="nav nav-tabs">
+    <li ng-class="{'active': isActiveTest('whitelist')}">
+      <a href="#" ng-click="setActiveTest('whitelist')">
                 Whitelist
             </a>
-        </li>
-        <li ng-class="{'active': isActiveTest('blacklist')}">
-            <a href="#" ng-click="setActiveTest('blacklist')">
+    </li>
+    <li ng-class="{'active': isActiveTest('blacklist')}">
+      <a href="#" ng-click="setActiveTest('blacklist')">
                 Blacklist
             </a>
-        </li>
-        <li ng-class="{'active': isActiveTest('codeTree')}">
-            <a href="#" ng-click="setActiveTest('codeTree')">
+    </li>
+    <li ng-class="{'active': isActiveTest('codeTree')}">
+      <a href="#" ng-click="setActiveTest('codeTree')">
                 Structure
             </a>
-        </li>
-    </ul>
+    </li>
+  </ul>
 </script>
 
 <div class="container">
-    <div class="jumbotron" ng-show="true">
-        <h1 class="text-center">
-            <span class="text-primary">
-                <img src="assets/images/mint.png">
-                jsMint
-            </span>
-        </h1>
-        <h2 class="text-center">
-            Refresh your JavaScript.
-        </h2>
+  <div class="jumbotron" ng-show="true">
+    <h1 class="text-center">
+      <span class="text-primary">
+        <img src="assets/images/mint.png"> jsMint
+      </span>
+    </h1>
+    <h2 class="text-center">
+      Refresh your JavaScript.
+    </h2>
 
-        <br>
+    <br>
 
+    <p class="lead">
+      jsMint is a smart, friendly
+      <strong>JavaScript checking tool</strong>. Just type in some code and see it automatically checked using three
+      <strong>smart, super-customizable tests</strong>. It provides advanced
+      <strong>unit testing</strong> and granular
+      <strong>feedback</strong>.
+    </p>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+      <div id="editor">// Your code here...</div>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+      <h3>
+        <span class="fa fa-dashboard"></span>
+        Test results
+      </h3>
+
+      <span ng-include="'tab-list'"></span>
+      <div>
+        <div class="panel panel-body" ng-show="isActiveTest('whitelist')">
+          <p class="lead">
+            You MUST use the following:
+          </p>
+
+          <div class="list-group">
+            <div class="list-group-item list-group-item-success" ng-repeat="item in whitelistResults.contains">
+              <span class="fa fa-check fa-lg"></span>
+              {{item}}
+            </div>
+            <div class="list-group-item list-group-item-danger" ng-repeat="item in whitelistResults.missing">
+              <span class="fa fa-close fa-lg"></span>
+              {{item}}
+            </div>
+          </div>
+
+          <br>
+
+          <p class="lead text-success" ng-show="whitelistResults.passing">
+            <span class="fa fa-check fa-lg"></span>
+            Passing whitelist test
+          </p>
+          <p class="lead text-danger" ng-show="!whitelistResults.passing">
+            <span class="fa fa-close fa-lg"></span>
+            Failing whitelist test
+          </p>
+        </div>
+        <div class="panel panel-body" ng-show="isActiveTest('blacklist')">
+          <p class="lead">
+            You MUST NOT use the following:
+          </p>
+
+          <div class="list-group">
+            <div class="list-group-item list-group-item-success" ng-repeat="item in blacklistResults.absent">
+              <span class="fa fa-check fa-lg"></span>
+              {{item}}
+            </div>
+            <div class="list-group-item list-group-item-danger" ng-repeat="item in blacklistResults.violates">
+              <span class="fa fa-close fa-lg"></span>
+              {{item}}
+            </div>
+          </div>
+
+          <br>
+
+          <p class="lead text-success" ng-show="blacklistResults.passing">
+            <span class="fa fa-check fa-lg"></span>
+            Passing blacklist check
+          </p>
+          <p class="lead text-danger" ng-show="!blacklistResults.passing">
+            <span class="fa fa-close fa-lg"></span>
+            Failing blacklist check
+          </p>
+        </div>
+        <div class="panel panel-body" ng-show="isActiveTest('codeTree')">
+          <p class="lead">
+            Your code's structure:
+          </p>
+
+          <script type="text/ng-template" id="tree-item">
+            {{item.type}}
+            <ul>
+              <li ng-repeat="item in item.children" ng-include="'tree-item'"></li>
+            </ul>
+          </script>
+
+          <ul>
+            <li ng-repeat="item in [codeTree]" ng-include="'tree-item'"></li>
+          </ul>
+
+          <p class="lead">
+            Required structure:
+          </p>
+
+          <ul>
+            <li ng-repeat="item in [matchTree]" ng-include="'tree-item'"></li>
+          </ul>
+
+          <p class="lead text-success" ng-show="codeTreeMatched">
+            <span class="fa fa-check fa-lg"></span>
+            Passing structure test
+          </p>
+          <p class="lead text-danger" ng-show="!codeTreeMatched">
+            <span class="fa fa-close fa-lg"></span>
+            Failing structure test
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+
+    <h3>
+      <span class="fa fa-wrench"></span>
+      Specify tests
+    </h3>
+
+    <span ng-include="'tab-list'"></span>
+
+    <div>
+      <div class="panel panel-body" ng-show="isActiveTest('whitelist')">
         <p class="lead">
-            jsMint is a smart, friendly <strong>JavaScript checking tool</strong>. Just type in some code
-            and see it automatically checked using three <strong>smart, super-customizable tests</strong>.
-            It provides advanced <strong>unit testing</strong> and granular <strong>feedback</strong>.
+          Specify statement types that MUST be used.
         </p>
-    </div>
 
-    <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-            <div id="editor">// Your code here...</div>
+        <div class="checkbox" ng-repeat="type in statementTypes">
+          <label>
+            <input type="checkbox" ng-model="whitelistHash[type]" ng-change="check()"> {{type}}
+          </label>
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-            <h3>
-                <span class="fa fa-dashboard"></span>
-                Test results
-            </h3>
+      </div>
+      <div class="panel panel-body" ng-show="isActiveTest('blacklist')">
+        <p class="lead">
+          Specify statement types that MUST NOT be used.
+        </p>
 
-            <span ng-include="'tab-list'"></span>
-            <div>
-                <div class="panel panel-body" ng-show="isActiveTest('whitelist')">
-                    <p class="lead">
-                        You MUST use the following:
-                    </p>
-
-                    <div class="list-group">
-                        <div class="list-group-item list-group-item-success"
-                            ng-repeat="item in whitelistResults.contains">
-                            <span class="fa fa-check fa-lg"></span>
-                            {{item}}
-                        </div>
-                        <div class="list-group-item list-group-item-danger"
-                            ng-repeat="item in whitelistResults.missing">
-                            <span class="fa fa-close fa-lg"></span>
-                            {{item}}
-                        </div>
-                    </div>
-
-                    <br>
-
-                    <p class="lead text-success" ng-show="whitelistResults.passing">
-                        <span class="fa fa-check fa-lg"></span>
-                        Passing whitelist test
-                    </p>
-                    <p class="lead text-danger" ng-show="!whitelistResults.passing">
-                        <span class="fa fa-close fa-lg"></span>
-                        Failing whitelist test
-                    </p>
-                </div>
-                <div class="panel panel-body" ng-show="isActiveTest('blacklist')">
-                    <p class="lead">
-                        You MUST NOT use the following:
-                    </p>
-
-                    <div class="list-group">
-                        <div class="list-group-item list-group-item-success"
-                            ng-repeat="item in blacklistResults.absent">
-                            <span class="fa fa-check fa-lg"></span>
-                            {{item}}
-                        </div>
-                        <div class="list-group-item list-group-item-danger"
-                            ng-repeat="item in blacklistResults.violates">
-                            <span class="fa fa-close fa-lg"></span>
-                            {{item}}
-                        </div>
-                    </div>
-
-                    <br>
-
-                    <p class="lead text-success" ng-show="blacklistResults.passing">
-                        <span class="fa fa-check fa-lg"></span>
-                        Passing blacklist check
-                    </p>
-                    <p class="lead text-danger" ng-show="!blacklistResults.passing">
-                        <span class="fa fa-close fa-lg"></span>
-                        Failing blacklist check
-                    </p>
-                </div>
-                <div class="panel panel-body" ng-show="isActiveTest('codeTree')">
-                    <p class="lead">
-                        Your code's structure:
-                    </p>
-
-                    <script type="text/ng-template" id="tree-item">
-                        {{item.type}}
-                        <ul>
-                            <li ng-repeat="item in item.children" ng-include="'tree-item'"></li>
-                        </ul>
-                    </script>
-
-                    <ul>
-                        <li ng-repeat="item in [codeTree]" ng-include="'tree-item'"></li>
-                    </ul>
-
-                    <p class="lead">
-                        Required structure:
-                    </p>
-
-                    <ul>
-                        <li ng-repeat="item in [matchTree]" ng-include="'tree-item'"></li>
-                    </ul>
-
-                    <p class="lead text-success" ng-show="codeTreeMatched">
-                        <span class="fa fa-check fa-lg"></span>
-                        Passing structure test
-                    </p>
-                    <p class="lead text-danger" ng-show="!codeTreeMatched">
-                        <span class="fa fa-close fa-lg"></span>
-                        Failing structure test
-                    </p>
-                </div>
-            </div>
+        <div class="checkbox" ng-repeat="type in statementTypes">
+          <label>
+            <input type="checkbox" ng-model="blacklistHash[type]" ng-change="check()"> {{type}}
+          </label>
         </div>
+      </div>
+      <div class="panel panel-body" ng-show="isActiveTest('codeTree')">
+        <p class="lead">
+          Specify a tree below that the tree generated from the input code must contain.
+        </p>
+        <script type="text/ng-template" id="interactive-tree-item">
+          <span>{{item.type}}</span>
+
+          <div class="btn-group btn-group-sm">
+            <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+              <span class="fa fa-plus"></span>
+              Add child
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li ng-repeat="type in statementTypes" ng-click="addChild(item, type)">
+                <a href="#">{{type}}</a>
+              </li>
+            </ul>
+          </div>
+
+          <ul>
+            <li ng-repeat="item in item.children" ng-include="'interactive-tree-item'"></li>
+          </ul>
+        </script>
+
+        <ul>
+          <li ng-repeat="item in [matchTree]" ng-include="'interactive-tree-item'"></li>
+        </ul>
+
+        <button class="btn btn-primary" ng-click="clearMatchTree()">
+          <span class="fa fa-close"></span>
+          Reset tree
+        </button>
+      </div>
     </div>
-
-    <hr>
-
-    <div class="row">
-
-        <h3>
-            <span class="fa fa-wrench"></span>
-            Specify tests
-        </h3>
-
-        <span ng-include="'tab-list'"></span>
-
-        <div>
-            <div class="panel panel-body" ng-show="isActiveTest('whitelist')">
-                <p class="lead">
-                    Specify statement types that MUST be used.
-                </p>
-
-                <div class="checkbox" ng-repeat="type in statementTypes">
-                    <label>
-                        <input type="checkbox" ng-model="whitelistHash[type]" ng-change="check()"> {{type}}
-                    </label>
-                 </div>
-            </div>
-            <div class="panel panel-body" ng-show="isActiveTest('blacklist')">
-                <p class="lead">
-                    Specify statement types that MUST NOT be used.
-                </p>
-
-                <div class="checkbox" ng-repeat="type in statementTypes">
-                    <label>
-                        <input type="checkbox" ng-model="blacklistHash[type]" ng-change="check()"> {{type}}
-                    </label>
-                 </div>
-            </div>
-            <div class="panel panel-body" ng-show="isActiveTest('codeTree')">
-                <p class="lead">
-                    Specify a tree below that the tree generated from the input code must contain.
-                </p>
-                <script type="text/ng-template" id="interactive-tree-item">
-                    <span>{{item.type}}</span>
-
-                    <div class="btn-group btn-group-sm">
-                      <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
-                        <span class="fa fa-plus"></span>
-                        Add child
-                        <span class="caret"></span>
-                      </button>
-                      <ul class="dropdown-menu" role="menu">
-                        <li ng-repeat="type in statementTypes" ng-click="addChild(item, type)">
-                            <a href="#">{{type}}</a>
-                        </li>
-                      </ul>
-                    </div>
-
-                    <ul>
-                        <li ng-repeat="item in item.children" ng-include="'interactive-tree-item'"></li>
-                    </ul>
-                </script>
-
-                <ul>
-                    <li ng-repeat="item in [matchTree]" ng-include="'interactive-tree-item'"></li>
-                </ul>
-
-                <button class="btn btn-primary" ng-click="clearMatchTree()">
-                    <span class="fa fa-close"></span>
-                    Reset tree
-                </button>
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
 
 <footer class="footer">
   <div class="container lead">
     <p>
-        jsMint &copy; <a href="http://hathix.com">Neel Mehta</a>.
-        Open-source on <a href="https://github.com/hathix/jsmint.git">GitHub</a>.
+      jsMint &copy; <a href="http://hathix.com">Neel Mehta</a>. Open-source on <a href="https://github.com/hathix/jsmint.git">GitHub</a>.
     </p>
   </div>
 </footer>
