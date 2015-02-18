@@ -147,6 +147,12 @@ angular.module('jsmintApp').controller('MainCtrl', function($scope, $http) {
 
   editor.on('change', _.throttle($scope.check, 100));
 
+  // fill in sample info for the tests
+  $scope.whitelistHash["ForStatement"] = true;
+  $scope.whitelistHash["IfStatement"] = true;
+  $scope.blacklistHash["WhileStatement"] = true;
+  $scope.addChild($scope.matchTree, 'ForStatement');
+
   // run this on init
   $scope.check();
 });
