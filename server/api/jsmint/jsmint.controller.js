@@ -221,7 +221,7 @@ exports.codetree = function(req, res) {
   var statementTree = toStatementTree(ast);
   var matched = undefined;
   if (treeToMatch) {
-      matched = matchTree(statementTree, treeToMatch);
+    matched = matchTree(statementTree, treeToMatch);
   }
 
   res.json({
