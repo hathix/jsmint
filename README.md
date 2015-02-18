@@ -36,6 +36,7 @@ jsMint ships with a friendly interface to three powerful RESTful APIs to check J
 
 ## Tools used
 
+* npm
 * Grunt
 * Bower
 * Yeoman
