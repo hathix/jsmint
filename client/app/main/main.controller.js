@@ -21,60 +21,7 @@ angular.module('jsmintApp').controller('MainCtrl', function($scope, $http) {
   $scope.codeTree = {};
   $scope.codeTreeMatched = false;
 
-  // the tree user wants to match against
-  var generateDefaultMatchTree = function() {
-    return {
-      type: "Program",
-      children: []
-    };
-  };
-  $scope.matchTree = generateDefaultMatchTree();
-
-  // handle tabs
-  $scope.activeTest = 'whitelist';
-  $scope.setActiveTest = function(test) {
-    $scope.activeTest = test;
-  };
-  $scope.isActiveTest = function(test) {
-    return $scope.activeTest === test;
-  };
-
-  // the tree they want to match against (`matchTree`)
-  // adds a child with the given type to the given node
-  $scope.addChild = function(node, type) {
-    if (type) {
-      node.children.push({
-        type: type,
-        children: []
-      });
-
-      // re-render and re-check output tree
-      $scope.check();
-    }
-  };
-  // resets the `matchTree` to its default (empty) state.
-  $scope.clearMatchTree = function() {
-    $scope.matchTree = generateDefaultMatchTree();
-
-    // re-render and re-check output tree
-    $scope.check();
-  };
-
-  $scope.codeTree = [{
-    type: "a",
-    children: [{
-      type: "b",
-      children: [{
-        type: "c",
-        children: []
-      }]
-    }, {
-      type: "d",
-      children: []
-    }]
-  }];
-
-
+  // Whitelist and Blacklist APIs
   // a hash of statements that must be used
   // each statement maps to either true (must be used) or false
   // fill in with everything being false by default
@@ -103,17 +50,56 @@ angular.module('jsmintApp').controller('MainCtrl', function($scope, $http) {
     Returns a list of all statements that MUST be used.
   */
   $scope.getWhitelist = function() {
-      return hashToArray($scope.whitelistHash);
+    return hashToArray($scope.whitelistHash);
   };
 
   /*
     Returns a list of all statements that MUST NOT be used
   */
   $scope.getBlacklist = function() {
-      return hashToArray($scope.blacklistHash);
+    return hashToArray($scope.blacklistHash);
   }
 
-  // Runs the selected test on the user's inputted code.
+  // Structure analyzing API
+  // the tree user wants to match against
+  var generateDefaultMatchTree = function() {
+    return {
+      type: "Program",
+      children: []
+    };
+  };
+  $scope.matchTree = generateDefaultMatchTree();
+
+  /*
+    Adds a child with the given `type` to the given `node`.
+  */
+  $scope.addChild = function(node, type) {
+    if (type) {
+      node.children.push({
+        type: type,
+        children: []
+      });
+
+      // re-render and re-check output tree
+      $scope.check();
+    }
+  };
+
+  /*
+    Resets the `matchTree` to its default (empty) state.
+  */
+  $scope.clearMatchTree = function() {
+    $scope.matchTree = generateDefaultMatchTree();
+
+    // re-render and re-check output tree
+    $scope.check();
+  };
+
+  $scope.codeTree = {};
+
+  /*
+    Runs the selected test on the user's inputted code.
+  */
   $scope.check = function() {
     var text = editor.getValue();
 
@@ -143,7 +129,17 @@ angular.module('jsmintApp').controller('MainCtrl', function($scope, $http) {
     });
   };
 
-  // initialize ace editor
+
+  // tabs
+  $scope.activeTest = 'whitelist';
+  $scope.setActiveTest = function(test) {
+    $scope.activeTest = test;
+  };
+  $scope.isActiveTest = function(test) {
+    return $scope.activeTest === test;
+  };
+
+  // ace editor
   editor = ace.edit("editor");
   editor.setTheme("ace/theme/xcode");
   editor.getSession().setUseWrapMode(true);

@@ -82,9 +82,6 @@ var matchTree = function(realTree, treeToMatch) {
   if (!realTree._visited && treeToMatch.type == realTree.type) {
     // found it!
 
-    // mark this node as visited already so we can't reuse it
-    // realTree._visited = true;
-
     // now start checking `treeToMatch`'s children
 
     if (treeToMatch.children.length === 0) {
