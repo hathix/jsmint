@@ -9,9 +9,9 @@ jsMint is a smart, friendly JavaScript checking tool. Just type in some code and
 After `git clone`'ing this repo and `cd`'ing into the new directory, run:
 
 ```
-npm install
-bower install
-grunt serve
+$ npm install
+$ bower install
+$ grunt serve
 ```
 
-The last command will open up `localhost:9000` which has the app running.
+The last command will open up `localhost:9000`, where the app will be running.
