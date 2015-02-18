@@ -126,17 +126,6 @@ var _matchTreeChildren = function(realTree, treeToMatch) {
   return foundInChildren.indexOf(true) > -1;
 };
 
-
-// Uses Acorn to parse the given `text` and returns its output.
-// A test function.
-exports.acorn = function(req, res) {
-  var result = acorn.parse(req.body.text);
-
-  res.json({
-    result: result
-  });
-};
-
 /*
     Determines if the given `text` includes all of the required statements.
 

@@ -14,6 +14,5 @@ router.use(bodyParser.urlencoded({
 router.post('/whitelist', controller.whitelist);
 router.post('/blacklist', controller.blacklist);
 router.post('/codetree', controller.codetree);
-router.post('/acorn', controller.acorn);
 
 module.exports = router;
