@@ -10,8 +10,8 @@ angular.module('jsmintApp').controller('MainCtrl', function($scope, $http) {
     'WhileStatement',
     'VariableDeclaration',
     'ExpressionStatement'
-];
-$scope.statementTypes = $scope.statementTypes.sort();
+  ];
+  $scope.statementTypes = $scope.statementTypes.sort();
 
   $scope.whitelistResults = {};
   $scope.blacklistResults = {};
@@ -65,24 +65,43 @@ $scope.statementTypes = $scope.statementTypes.sort();
   }];
 
 
-  var whitelist = [
-    "IfStatement",
-    "ForStatement"
-  ];
-  var blacklist = [
-    "WhileStatement"
-  ];
+  // a hash of statements that must be used
+  // each statement maps to either true (must be used) or false
+  // fill in with everything being false by default
+  $scope.whitelistHash = _.reduce($scope.statementTypes, function(accumulator, value) {
+    accumulator[value] = false;
+    return accumulator;
+  }, {});
+  // a hash of statements that must not be used
+  // each statement maps to either true (must not be used) or false
+  // it starts with the same state as the whitelist hash so just copy i
+  $scope.blacklistHash = _.clone($scope.whitelistHash);
+
+  /*
+    Converts the whitelist or blacklist hashes into arrays where
+    the only elements are those where the corresponding entry in the hash was true.
+
+    hashToArray({ IfStatement: true, ForStatement: false }) == ['IfStatement']
+  */
+  var hashToArray = function(hash) {
+    return _(hash).map(function(truthiness, type) {
+      return truthiness ? type : undefined;
+  }).compact().value().sort();
+  }
 
   // Runs the selected test on the user's inputted code.
   $scope.check = function() {
     var text = editor.getValue();
 
-    $http.post("/api/jsmint/whitelist", {
-      includes: whitelist,
-      text: text
-    }).success(function(data) {
-      $scope.whitelistResults = data;
-    });
+    var whitelist = hashToArray($scope.whitelistHash);
+    var blacklist = hashToArray($scope.blacklistHash);
+
+      $http.post("/api/jsmint/whitelist", {
+        includes: whitelist,
+        text: text
+      }).success(function(data) {
+        $scope.whitelistResults = data;
+      });
 
     $http.post("/api/jsmint/blacklist", {
       excludes: blacklist,

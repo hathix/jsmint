@@ -1,30 +1,37 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
+<script type="text/ng-template" id="tab-list">
+    <ul class="nav nav-tabs">
+        <li ng-class="{'active': isActiveTest('whitelist')}">
+            <a href="#" ng-click="setActiveTest('whitelist')">
+                Whitelist
+            </a>
+        </li>
+        <li ng-class="{'active': isActiveTest('blacklist')}">
+            <a href="#" ng-click="setActiveTest('blacklist')">
+                Blacklist
+            </a>
+        </li>
+        <li ng-class="{'active': isActiveTest('codeTree')}">
+            <a href="#" ng-click="setActiveTest('codeTree')">
+                Code Tree
+            </a>
+        </li>
+    </ul>
+</script>
+
 <div class="container">
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
             <div id="editor"></div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <h3>
+                <span class="fa fa-dashboard"></span>
+                Test results
+            </h3>
 
-            <ul class="nav nav-tabs">
-                <li ng-class="{'active': isActiveTest('whitelist')}">
-                    <a href="#" ng-click="setActiveTest('whitelist')">
-                        Whitelist
-                    </a>
-                </li>
-                <li ng-class="{'active': isActiveTest('blacklist')}">
-                    <a href="#" ng-click="setActiveTest('blacklist')">
-                        Blacklist
-                    </a>
-                </li>
-                <li ng-class="{'active': isActiveTest('codeTree')}">
-                    <a href="#" ng-click="setActiveTest('codeTree')">
-                        Code Tree
-                    </a>
-                </li>
-            </ul>
-
+            <span ng-include="'tab-list'"></span>
             <div>
                 <div class="panel panel-body" ng-show="isActiveTest('whitelist')">
                     <p class="lead">
@@ -100,36 +107,75 @@
         </div>
     </div>
 
+    <br>
+
     <div class="row">
-        <script type="text/ng-template" id="interactive-tree-item">
-            <span class="lead">{{item.type}}</span>
 
-            <div class="btn-group btn-group-sm">
-              <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
-                <span class="fa fa-plus"></span>
-                Add child
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" role="menu">
-                <li ng-repeat="type in statementTypes" ng-click="addChild(item, type)">
-                    <a href="#">{{type}}</a>
-                </li>
-              </ul>
+        <h3>
+            <span class="fa fa-wrench"></span>
+            Specify tests
+        </h3>
+
+        <span ng-include="'tab-list'"></span>
+
+        <div>
+            <div class="panel panel-body" ng-show="isActiveTest('whitelist')">
+                <p class="lead">
+                    Specify statement types that MUST be used.
+                </p>
+
+                <div class="checkbox" ng-repeat="type in statementTypes">
+                    <label>
+                        <input type="checkbox" ng-model="whitelistHash[type]" ng-change="check()"> {{type}}
+                    </label>
+                 </div>
             </div>
+            <div class="panel panel-body" ng-show="isActiveTest('blacklist')">
+                <p class="lead">
+                    Specify statement types that MUST NOT be used.
+                </p>
 
-            <ul>
-                <li ng-repeat="item in item.children" ng-include="'interactive-tree-item'"></li>
-            </ul>
-        </script>
+                <div class="checkbox" ng-repeat="type in statementTypes">
+                    <label>
+                        <input type="checkbox" ng-model="blacklistHash[type]" ng-change="check()"> {{type}}
+                    </label>
+                 </div>
+            </div>
+            <div class="panel panel-body" ng-show="isActiveTest('codeTree')">
+                <p class="lead">
+                    Specify a tree below that the code tree from the inputted code must match.
+                </p>
+                <script type="text/ng-template" id="interactive-tree-item">
+                    <span>{{item.type}}</span>
 
-        <ul>
-            <li ng-repeat="item in matchTree" ng-include="'interactive-tree-item'"></li>
-        </ul>
+                    <div class="btn-group btn-group-sm">
+                      <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+                        <span class="fa fa-plus"></span>
+                        Add child
+                        <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu" role="menu">
+                        <li ng-repeat="type in statementTypes" ng-click="addChild(item, type)">
+                            <a href="#">{{type}}</a>
+                        </li>
+                      </ul>
+                    </div>
 
-        <button class="btn btn-danger" ng-click="clearMatchTree()">
-            <span class="fa fa-close"></span>
-            Reset tree
-        </button>
+                    <ul>
+                        <li ng-repeat="item in item.children" ng-include="'interactive-tree-item'"></li>
+                    </ul>
+                </script>
+
+                <ul>
+                    <li ng-repeat="item in matchTree" ng-include="'interactive-tree-item'"></li>
+                </ul>
+
+                <button class="btn btn-danger" ng-click="clearMatchTree()">
+                    <span class="fa fa-close"></span>
+                    Reset tree
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 
