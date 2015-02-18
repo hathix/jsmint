@@ -102,16 +102,20 @@
 
     <div class="row">
         <script type="text/ng-template" id="interactive-tree-item">
-            {{item.type}}
+            <span class="lead">{{item.type}}</span>
 
-            <select ng-model="item.__text" class="form-control">
-                <option value="{{type}}" ng-repeat="type in statementTypes">{{type}}</option>
-            </select>
-
-            <button class="btn btn-default" ng-click="addChild(item, item.__text); item.__text = null;">
+            <div class="btn-group btn-group-sm">
+              <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
                 <span class="fa fa-plus"></span>
                 Add child
-            </button>
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <li ng-repeat="type in statementTypes" ng-click="addChild(item, type)">
+                    <a href="#">{{type}}</a>
+                </li>
+              </ul>
+            </div>
 
             <ul>
                 <li ng-repeat="item in item.children" ng-include="'interactive-tree-item'"></li>
@@ -124,7 +128,7 @@
 
         <button class="btn btn-danger" ng-click="clearMatchTree()">
             <span class="fa fa-close"></span>
-            Clear tree
+            Reset tree
         </button>
     </div>
 </div>
